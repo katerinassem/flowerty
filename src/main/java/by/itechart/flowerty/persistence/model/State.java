@@ -13,6 +13,12 @@ public class State {
     private Long id;
     private DESCRIPTION_TYPE description;
 
+    public State() {}
+
+    public State(DESCRIPTION_TYPE description) {
+        this.description = description;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", length = 10, nullable = false)

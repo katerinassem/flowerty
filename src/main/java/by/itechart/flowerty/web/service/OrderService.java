@@ -24,7 +24,6 @@ import by.itechart.flowerty.persistence.model.Goods;
 import by.itechart.flowerty.persistence.model.Item;
 import by.itechart.flowerty.persistence.model.Order;
 import by.itechart.flowerty.persistence.model.OrderAltering;
-import by.itechart.flowerty.persistence.model.Role;
 import by.itechart.flowerty.persistence.model.State;
 import by.itechart.flowerty.persistence.model.User;
 import by.itechart.flowerty.persistence.mongo.model.FinancialReport;
@@ -198,18 +197,27 @@ public class OrderService {
                 String editingUserRoleDescription = StringUtils.removeStart(userPrincipal.getAuthorities().toArray()[0].toString(), "ROLE_");
 
                 //  Filter logic for this order and this user role
+                List<State> allStates = orderEditBundle.getOrder().getAvailableStatesStrategy().getAvailableOrderStates(editingUserRoleDescription);
+                for(State state : allStates){
+                    availableStates.add(getStateByDescription(state.getDescription()));
+                }
+                /*
                 List<State> allStates = (List<State>)stateRepository.findAll();
                 for(State state : allStates){
                     if(canChangeToThisState(editingUserRoleDescription, state, orderEditBundle.getOrder().getState())){
                         availableStates.add(state);
                     }
                 }
+
+                */
             }
         }
         orderEditBundle.setAvailableStates(availableStates);
         return orderEditBundle;
     }
 
+
+    /*
     //TODO: make smart
     private boolean canChangeToThisState(String roleDescription, State newState, State currentState){
         switch (newState.getDescription()){
@@ -249,6 +257,8 @@ public class OrderService {
             }
         }
     }
+
+    */
 
     public OrderCreateBundle getOrderCreateBundle(){
 

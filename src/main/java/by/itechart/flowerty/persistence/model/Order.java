@@ -44,6 +44,7 @@ public class Order {
     private Date deliveryDate;
     private List<Item> items;
     private Address address;
+    private AvailableStatesStrategy availableStatesStrategy;
 
     public Order() {
     }
@@ -127,6 +128,16 @@ public class Order {
         }
         return new OrderDocument(id.toString(), customer.getFathername(), receiver.getFathername(), deliveryDate, customer.getCompany());
     }
+
+    @JsonIgnore
+    @Transient
+    public AvailableStatesStrategy getAvailableStatesStrategy() {
+        if(availableStatesStrategy == null) {
+            availableStatesStrategy = new StateStrategyFactory().getStateStrategy(this.state);
+        }
+        return availableStatesStrategy;
+    }
+
     public void setDeliveryDate(Date deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
@@ -173,6 +184,10 @@ public class Order {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public void setAvailableStatesStrategy(AvailableStatesStrategy availableStatesStrategy) {
+        this.availableStatesStrategy = availableStatesStrategy;
     }
 
     @Override
