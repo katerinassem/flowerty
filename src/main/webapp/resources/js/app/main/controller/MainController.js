@@ -5,11 +5,7 @@
 angular.module('flowertyApplication')
 
 angular.module('flowertyApplication').controller('MainController',
-<<<<<<< HEAD
-    function ($scope, $http, $location, $filter, AuthServerProvider, $localStorage, notificationService, xlatService, dynamicSearchFactory, $route) {
-=======
     function ($scope, $http, $filter, $window, AuthServerProvider, $localStorage, notificationService, xlatService, dynamicSearchFactory) {
->>>>>>> 2c3108b8e83b58d8d1c6f5b0184ce4e76e195352
 
         AuthServerProvider.setLoggedUser($scope);
 
@@ -64,7 +60,7 @@ angular.module('flowertyApplication').controller('MainController',
             xlatService.setCurrentLanguage(language);
             $window.location.reload();
         };
-        
+
         $scope.notification = notificationService.getNotificationBundle();
 
         $scope.localization = {
