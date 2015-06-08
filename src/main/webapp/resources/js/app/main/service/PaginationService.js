@@ -47,9 +47,6 @@ angular.module("flowertyApplication").service('paginationService', ['$location',
                     if (!data.content) {
                         $location.path("login");
                     } else {
-                    	
-                    	console.log("___________________:" + data.content.length);
-                    	
                         console.log("Got page " + pageNumber + " from server with limit of " + listBundle.limit +":\n"
                         + JSON.stringify({data: data.content}));
                         listBundle.list = data.content;

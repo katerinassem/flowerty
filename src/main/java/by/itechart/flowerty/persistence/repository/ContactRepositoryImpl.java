@@ -32,7 +32,7 @@ public class ContactRepositoryImpl extends QueryDslRepositorySupport implements 
 
 	// id of contacts that hasn't user
 	List<Long> result = from(CONTACT).where(CONTACT.id.notIn(ids)).list(CONTACT.id);
-	
+
 	return result;
     }
 }

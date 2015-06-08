@@ -52,7 +52,6 @@ public class ContactRepositoryTest extends JpaConfigurationAware {
         Assert.assertEquals(expected.getAddress().getTown(), actual.getAddress().getTown());
     }
 
-    @Ignore
     @Test
     public void findAll_RetursNotNullCollection() {
         final List<Contact> actual = (List<Contact>) contactRepository.findAll();
@@ -61,7 +60,6 @@ public class ContactRepositoryTest extends JpaConfigurationAware {
         notEmpty(actual);
     }
 
-    @Ignore
     @Test
     public void findBySurnameStartingWithAndCompany_PassValidParameters_ReturnsNotNullCollectionWithTargetContact() {
         final Contact expected = ContactRepositoryHelperTest.getContactWithIdOne();

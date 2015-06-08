@@ -15,7 +15,6 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by Rostislav on 13-May-15
  */
-@Ignore
 public class ItemRepositoryTest extends JpaConfigurationAware {
 
     @Autowired

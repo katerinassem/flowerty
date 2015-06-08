@@ -4,6 +4,7 @@
  */
 package by.itechart.flowerty.web.controller.email;
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,105 +40,109 @@ import by.itechart.flowerty.persistence.model.Phone;
 import by.itechart.flowerty.security.service.UserDetailsServiceImpl;
 import by.itechart.flowerty.web.controller.util.FlowertUtil;
 
+
 /**
  * @author Eugene Putsykovich(slesh) Apr 14, 2015
- *
  *         execute send mail for specific contacts
  */
 @Controller
 public class EmailController {
-    private Logger LOGGER = LoggerFactory.getLogger(EmailController.class);
 
-    @Autowired
-    private Settings settings;
+        private Logger LOGGER = LoggerFactory.getLogger(EmailController.class);
 
-    @Autowired
-    private MailService mailService;
+        @Autowired
+        private Settings settings;
 
-    @Autowired
-    private FlowertyMessagePublisher publisher;
+        @Autowired
+        private MailService mailService;
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+        @Autowired
+        private FlowertyMessagePublisher publisher;
 
-    @ResponseBody
-    @RequestMapping(value = "email/templates", method = RequestMethod.GET)
-    public FlowertTemplate[] emailTemplate() throws JsonGenerationException, JsonMappingException,
-	    FileNotFoundException, IOException {
+        @Autowired
+        private UserDetailsServiceImpl userDetailsService;
 
-	return getTemplates();
-    }
+        @ResponseBody
+        @RequestMapping(value = "email/templates", method = RequestMethod.GET)
+        public FlowertTemplate[] emailTemplate() throws JsonGenerationException, JsonMappingException, FileNotFoundException, IOException {
 
-    @ResponseBody
-    @RequestMapping(value = "email/send", method = RequestMethod.POST)
-    public void sendEmail(@RequestParam("email") String emailJson, @RequestParam("template") String templateJson,
-	    @RequestPart(value = "file", required = false) MultipartFile[] attachments) throws BadHttpRequest {
-	LOGGER.info("send email: {}. number of attachments: {}", emailJson, attachments == null ? 0
-		: attachments.length);
-	try {
-	    ObjectMapper objectMapper = new ObjectMapper();
+                return getTemplates();
+        }
 
-	    EmailInfo email = objectMapper.readValue(emailJson, EmailInfo.class);
-	    FlowertTemplate template = objectMapper.readValue(templateJson, FlowertTemplate.class);
-	    Contact sender = userDetailsService.getCurrentContact();
+        @ResponseBody
+        @RequestMapping(value = "email/send", method = RequestMethod.POST)
+        public void sendEmail(@RequestParam("email") String emailJson,
+                              @RequestParam("template") String templateJson,
+                              @RequestPart(value = "file", required = false) MultipartFile[] attachments) throws BadHttpRequest {
 
-	    for (Contact to : email.getTo()) {
-		email.setText(buildMessageBody(template, to.getName(), sender));
-		if (attachments == null || attachments.length == 0) {
-		    publisher.send(to.getEmail(), email.getSubject(), email.getText());
-		} else {
-		    publisher.send(to.getEmail(), email.getSubject(), email.getText(), convert(attachments));
-		    FlowertUtil.saveMultiparts(settings.getAttachmentsPath(), attachments);
-		}
-	    }
-	} catch (IOException | MessagingException e) {
-	    LOGGER.error(e.getMessage());
+                LOGGER.info("send email: {}. number of attachments: {}", emailJson, attachments == null ? 0 : attachments.length);
+                try {
+                        ObjectMapper objectMapper = new ObjectMapper();
 
-	    throw new BadHttpRequest(e);
-	}
-    }
+                        EmailInfo email = objectMapper.readValue(emailJson, EmailInfo.class);
+                        FlowertTemplate template = objectMapper.readValue(templateJson, FlowertTemplate.class);
+                        Contact sender = userDetailsService.getCurrentContact();
 
-    private Map<String, byte[]> convert(MultipartFile[] attachments) throws IOException {
-	Map<String, byte[]> resources = new HashMap<String, byte[]>(attachments.length);
-	for (MultipartFile attachment : attachments) {
-	    String name = attachment.getOriginalFilename();
-	    byte[] value = IOUtils.toByteArray(attachment.getInputStream());
-	    resources.put(name, value);
-	}
+                        for (Contact to : email.getTo()) {
+                                email.setText(buildMessageBody(template, to.getName(), sender));
+                                if (attachments == null || attachments.length == 0) {
+                                        publisher.send(to.getEmail(), email.getSubject(), email.getText());
+                                } else {
+                                        publisher.send(to.getEmail(), email.getSubject(), email.getText(), convert(attachments));
+                                        FlowertUtil.saveMultiparts(settings.getAttachmentsPath(), attachments);
+                                }
+                        }
+                } catch (IOException | MessagingException e) {
+                        LOGGER.error(e.getMessage());
 
-	return resources;
-    }
+                        throw new BadHttpRequest(e);
+                }
+        }
 
-    private FlowertTemplate[] getTemplates() throws FileNotFoundException, IOException {
-	File[] files = new File(getClass().getClassLoader().getResource("templates").getPath()).listFiles();
-	FlowertTemplate[] templates = new FlowertTemplate[files.length];
-	for (int i = 0; i < files.length; ++i) {
-	    String name = files[i].getName();
-	    name = name.substring(0, name.indexOf(".st"));
-	    String value = IOUtils.toString(new FileInputStream(files[i]));
-	    templates[i] = new FlowertTemplate(name, value);
-	}
+        private Map<String, byte[]> convert(MultipartFile[] attachments) throws IOException {
 
-	return templates;
-    }
+                Map<String, byte[]> resources = new HashMap<String, byte[]>(attachments.length);
+                for (MultipartFile attachment : attachments) {
+                        String name = attachment.getOriginalFilename();
+                        byte[] value = IOUtils.toByteArray(attachment.getInputStream());
+                        resources.put(name, value);
+                }
 
-    private String buildMessageBody(FlowertTemplate template, String toName, Contact sender) {
-	StringTemplate st = new StringTemplate(template.getValue());
+                return resources;
+        }
 
-	st.setAttribute("NAME", toName);
+        private FlowertTemplate[] getTemplates() throws FileNotFoundException, IOException {
 
-	String fullname = String.format("%s %s %s", sender.getName(), sender.getSurname(), sender.getFathername());
-	st.setAttribute("US_FULL_NAME", fullname);
+                File[] files = new File(getClass().getClassLoader().getResource("templates").getPath()).listFiles();
+                FlowertTemplate[] templates = new FlowertTemplate[files.length];
+                for (int i = 0; i < files.length; ++i) {
+                        String name = files[i].getName();
+                        name = name.substring(0, name.indexOf(".st"));
+                        String value = IOUtils.toString(new FileInputStream(files[i]));
+                        templates[i] = new FlowertTemplate(name, value);
+                }
 
-	if (sender.getPhones() != null && sender.getPhones().size() > 0) {
-	    Phone phone = sender.getPhones().iterator().next();
+                return templates;
+        }
 
-	    String usPhone = String.format("+%d %d, %d", phone.getCountry(), phone.getOperator(), phone.getNumber());
-	    st.setAttribute("US_PHONE", usPhone);
-	}
+        private String buildMessageBody(FlowertTemplate template, String toName, Contact sender) {
 
-	st.setAttribute("US_EMAIL", sender.getEmail());
+                StringTemplate st = new StringTemplate(template.getValue());
 
-	return st.toString();
-    }
+                st.setAttribute("NAME", toName);
+
+                String fullname = String.format("%s %s %s", sender.getName(), sender.getSurname(), sender.getFathername());
+                st.setAttribute("US_FULL_NAME", fullname);
+
+                if (sender.getPhones() != null && sender.getPhones().size() > 0) {
+                        Phone phone = sender.getPhones().iterator().next();
+
+                        String usPhone = String.format("+%d %d, %d", phone.getCountry(), phone.getOperator(), phone.getNumber());
+                        st.setAttribute("US_PHONE", usPhone);
+                }
+
+                st.setAttribute("US_EMAIL", sender.getEmail());
+
+                return st.toString();
+        }
 }

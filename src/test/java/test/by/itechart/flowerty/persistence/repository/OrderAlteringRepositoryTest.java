@@ -21,7 +21,6 @@ public class OrderAlteringRepositoryTest extends JpaConfigurationAware {
     @Autowired
     private OrderAlteringRepository orderAlteringRepository;
 
-    @Ignore
     @Test
     public void findOne() {
 

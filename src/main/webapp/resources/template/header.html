@@ -31,7 +31,9 @@
         <div class="nav navbar-nav navbar-right navbar-text  navigation-group">
             <a href="#/profile" id="logged-user" class="active navigation-group-item" data-ng-show="current.isLogged"><strong>{{current.user.username}},</strong> {{'YOUR_ROLE' | xlat}} <strong>{{current.user.role  | xlat | lowercase | flowerCase:0:1:true | flowerSplit:'_':' '}}</strong> <span class="glyphicon glyphicon-user"></span></a>
             <a href="#" class="navbar-link navigation-group-item" data-ng-show="current.isLogged"> <span class="glyphicon glyphicon-cog"></span></a>
-            <a href="#/login" class="navbar-link navigation-group-item" data-ng-show="!current.isLogged"><span class="glyphicon glyphicon-log-in"> {{'LOGIN' | xlat}}</span></a>
+            <a href="#/login" class="navbar-link navigation-group-item" data-ng-show="!current.isLogged">
+            	<span class="glyphicon glyphicon-log-in"> {{'LOGIN' | xlat}}</span>
+           	</a>
             <a href="#/" class="navbar-link navigation-group-item" data-ng-click="current.logOut()" data-ng-show="current.isLogged"><span class="glyphicon glyphicon-log-out"> {{'LOGOUT' | xlat}}</span></a>
         </div>
         <div class="nav navbar-nav navbar-right navbar-text  navigation-group">

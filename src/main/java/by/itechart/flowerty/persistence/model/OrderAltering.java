@@ -2,7 +2,6 @@ package by.itechart.flowerty.persistence.model;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
@@ -59,7 +58,6 @@ public class OrderAltering {
     }
     @Column(name = "DATE")
     @Temporal(value = TemporalType.DATE)
-    @Past
     public Date getDate() {
         return date;
     }
