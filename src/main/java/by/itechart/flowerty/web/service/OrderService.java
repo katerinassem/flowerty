@@ -197,7 +197,7 @@ public class OrderService {
                 String editingUserRoleDescription = StringUtils.removeStart(userPrincipal.getAuthorities().toArray()[0].toString(), "ROLE_");
 
                 //  Filter logic for this order and this user role
-                List<State> allStates = orderEditBundle.getOrder().getAvailableStatesStrategy().getAvailableOrderStates(editingUserRoleDescription);
+                List<State> allStates = orderEditBundle.getOrder().availableStatesStrategy().getAvailableOrderStates(editingUserRoleDescription);
                 for(State state : allStates){
                     availableStates.add(getStateByDescription(state.getDescription()));
                 }

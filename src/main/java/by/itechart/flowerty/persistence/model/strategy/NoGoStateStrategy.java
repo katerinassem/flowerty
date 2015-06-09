@@ -2,6 +2,7 @@ package by.itechart.flowerty.persistence.model.strategy;
 
 import by.itechart.flowerty.persistence.model.AvailableStatesStrategy;
 import by.itechart.flowerty.persistence.model.State;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  * Strategy for order's states that cannot be changed to any other
  */
 
+@JsonSerialize
 public class NoGoStateStrategy implements AvailableStatesStrategy {
 
     @Override

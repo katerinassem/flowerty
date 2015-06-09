@@ -20,9 +20,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
-
 import org.codehaus.jackson.annotate.JsonIgnore;
-
 import by.itechart.flowerty.solr.model.OrderDocument;
 
 /**
@@ -44,7 +42,6 @@ public class Order {
     private Date deliveryDate;
     private List<Item> items;
     private Address address;
-    private AvailableStatesStrategy availableStatesStrategy;
 
     public Order() {
     }
@@ -129,13 +126,9 @@ public class Order {
         return new OrderDocument(id.toString(), customer.getFathername(), receiver.getFathername(), deliveryDate, customer.getCompany());
     }
 
-    @JsonIgnore
-    @Transient
-    public AvailableStatesStrategy getAvailableStatesStrategy() {
-        if(availableStatesStrategy == null) {
-            availableStatesStrategy = new StateStrategyFactory().getStateStrategy(this.state);
-        }
-        return availableStatesStrategy;
+    public AvailableStatesStrategy availableStatesStrategy() {
+
+        return new StateStrategyFactory().getStateStrategy(this.state);
     }
 
     public void setDeliveryDate(Date deliveryDate) {
@@ -184,10 +177,6 @@ public class Order {
 
     public void setAddress(Address address) {
         this.address = address;
-    }
-
-    public void setAvailableStatesStrategy(AvailableStatesStrategy availableStatesStrategy) {
-        this.availableStatesStrategy = availableStatesStrategy;
     }
 
     @Override

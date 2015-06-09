@@ -4,6 +4,7 @@ import by.itechart.flowerty.persistence.model.AvailableStatesStrategy;
 import by.itechart.flowerty.persistence.model.Role;
 import by.itechart.flowerty.persistence.model.State;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  * Created by Катерина on 08.06.2015.
  */
 
+@JsonSerialize
 public class ImpossibleStateStrategy implements AvailableStatesStrategy {
 
     @Override
