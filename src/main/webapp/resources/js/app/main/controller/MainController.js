@@ -2,10 +2,10 @@
 /**
  * Created by Катерина on 20.04.2015.
  */
-angular.module('flowertyApplication')
+angular.module('flowertyApplication');
 
 angular.module('flowertyApplication').controller('MainController',
-    function ($scope, $http, $filter, $window, AuthServerProvider, $localStorage, notificationService, xlatService, dynamicSearchFactory) {
+    function ($scope, $http, $filter, $window, $location, AuthServerProvider, $localStorage, notificationService, xlatService, dynamicSearchFactory) {
 
         AuthServerProvider.setLoggedUser($scope);
 
